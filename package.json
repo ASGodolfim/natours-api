@@ -1,0 +1,22 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "tour api project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ASGodolfim/natours-api.git"
+  },
+  "author": "Arthur Stone Godoflim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ASGodolfim/natours-api/issues"
+  },
+  "homepage": "https://github.com/ASGodolfim/natours-api#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
