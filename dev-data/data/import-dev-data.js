@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Tour = require('./../../models/tourModel');
 
-mongoose.connect('mongodb://localhost:27017').then(con =>{
+mongoose.connect('mongodb://localhost:27017/natours').then(con =>{
     console.log('DB Connected');
 });
 
