@@ -15,7 +15,7 @@ const tourSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'A tour need a max group size']
     },
-    dificulty: {
+    difficulty: {
         type: String,
         required: [true, 'A tour need a dificulty level']
     },
@@ -32,7 +32,11 @@ const tourSchema = new mongoose.Schema({
         required: [true, 'A tour need a price']
     },
     priceDicount: Number,
-    summery: {
+    summary: {
+        type: String,
+        trim: true
+    },
+    description: {
         type: String,
         required: [true, 'A tour need a description'],
         trim: true
