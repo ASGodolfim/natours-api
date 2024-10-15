@@ -3,8 +3,6 @@ const controller = require('./../controller/tourController')
 
 const router = express.Router();
 
-router.route('/top-5-cheap').get(controller.aliasTopTours, controller.getAllTours);
-
 router
     .route('/')
     .get(controller.getAllTours)
@@ -15,5 +13,9 @@ router
     .get(controller.getTourById)
     .put(controller.updateTour)
     .delete(controller.deleteTour);
+
+router.route('/top-5-cheap').get(controller.aliasTopTours, controller.getAllTours);
+
+router.route('/tour-stats').get(controller.getTourStats);
 
 module.exports = router;
