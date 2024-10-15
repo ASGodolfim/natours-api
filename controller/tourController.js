@@ -2,42 +2,8 @@ const Tour = require('./../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
 try{
-    const queryObj = {...req.query};
-    let queryStr = JSON.stringfy(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, match => `$${match}`);
-
-    let query = Tour.find(JSON.parse(queryStr));
-
-    //filter
-    if(req.query.sort){
-        const sortBy = req.query.sort.split(',').join(' ');
-        query = query.sort(sortBy);
-    } else {
-        query = query.sort('-createdAt');
-    }
-
-    //field limiting
-    if (req.query.fields) {
-        const fields = req.query.fields.split(',').join(' ');
-        query = query.select(fields);
-    } else {
-        query = query.select('-__v');
-    }
-
-    //pagination
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit *1 || 100;
-    const skip = (page - 1) * limit;
-    
-    query = query.skip(skip).limit(limit)
-    
-    if(req.query.page){
-        const numTour = await Tour.countDocuments();
-        if(skip >= numTour) return throw new Error("This Page doesn't exist");
-        
-    }
-
-    const tours = await query;
+    const features = new APIFeature(Tour.find(), req.query).filter().sort().limit().pagination();
+    const tours = await features.query;
 
     res.status(200).json({
         status: 'succsess',
@@ -120,8 +86,58 @@ exports.deleteTour = async (req, res) => {
 };
 
 class APIFeature{
-    constructor()
-}
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    filter(){
+        const queryObj = {...this.queryString};
+        const excludedFields = ['page', 'sort', 'limit', 'fields'];
+        excludedFields.forEach(element => {
+            delete queryObj[element]
+        });
+
+        let queryStr = JSON.stringfy(queryObj);
+        queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, match => `$${match}`);
+    
+        this.query = this.query.find(JSON.parse(queryStr));
+
+        return this;
+    }
+    sort(){
+
+        if(this.queryString.sort){
+            const sortBy = this.queryString.sort.split(',').join(' ');
+            this.query = this.query.sort(sortBy);
+        } else {
+            this.query = this.query.sort('-createdAt');
+        }
+
+        return this;
+    }
+
+    limit(){
+        if (this.queryString.fields) {
+            const fields = this.queryString.fields.split(',').join(' ');
+            this.query = this.query.select(fields);
+        } else {
+            this.query = this.query.select('-__v');
+        }
+        
+        return this;
+    }
+
+    pagination(){
+        const page = this.queryString.page * 1 || 1;
+        const limit = this.queryString.limit *1 || 100;
+        const skip = (page - 1) * limit;
+        
+        this.query = this.query.skip(skip).limit(limit)
+
+        return this;
+    }
+};
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
