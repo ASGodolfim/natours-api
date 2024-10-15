@@ -18,4 +18,6 @@ router.route('/top-5-cheap').get(controller.aliasTopTours, controller.getAllTour
 
 router.route('/tour-stats').get(controller.getTourStats);
 
+router.route('/monthly-plan/:year').get(controller.getMonthlyPlan);
+
 module.exports = router;
