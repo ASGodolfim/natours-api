@@ -8,6 +8,7 @@ try{
 
     let query = Tour.find(JSON.parse(queryStr));
 
+    //filter
     if(req.query.sort){
         const sortBy = req.query.sort.split(',').join(' ');
         query = query.sort(sortBy);
@@ -15,11 +16,25 @@ try{
         query = query.sort('-createdAt');
     }
 
+    //field limiting
     if (req.query.fields) {
         const fields = req.query.fields.split(',').join(' ');
         query = query.select(fields);
     } else {
         query = query.select('-__v');
+    }
+
+    //pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit *1 || 100;
+    const skip = (page - 1) * limit;
+    
+    query = query.skip(skip).limit(limit)
+    
+    if(req.query.page){
+        const numTour = await Tour.countDocuments();
+        if(skip >= numTour) return throw new Error("This Page doesn't exist");
+        
     }
 
     const tours = await query;
