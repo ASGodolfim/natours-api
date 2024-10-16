@@ -11,7 +11,7 @@ router
 router
     .route('/:id')
     .get(controller.getTourById)
-    .put(controller.updateTour)
+    .patch(controller.updateTour)
     .delete(controller.deleteTour);
 
 router.route('/top-5-cheap').get(controller.aliasTopTours, controller.getAllTours);
