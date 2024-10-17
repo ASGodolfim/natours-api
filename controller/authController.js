@@ -1,3 +1,4 @@
+const { promisify } = require('util')
 const catchAsync = require('../utils/catchAsync');
 const User = require('./../models/userModel');
 const jwt = require('jsonwebtoken');
@@ -58,3 +59,26 @@ exports.login = catchAsync(async (req, res, next) => {
         }
     )
 });
+
+exports.protect = catchAsync(async (req, res, next) => {
+    let token;
+    if  (req.headers.authorization &&
+         req.headers.authorization.startsWith('Bearer ')){
+            token = req.headers.authorization.split(' ')[1];
+         }
+    if (!token){
+        return next(new AppError('Please Log in First', 401));
+    }
+
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+    
+    const freshUser = User.findById(decoded.id).select('+passwordChangedAt');
+    if (!freshUser){
+        return next(new AppError('No user found please log again', 401));
+    }
+    if(freshUser.changedPasswordAfter(decoded.iat)){
+        return next(new AppError('User recently changed password please log in again', 401));
+    }
+    req.user = freshUser;
+    next();
+})
