@@ -4,6 +4,8 @@ const AppError = require('./utils/appError');
 const errorHandler = require('./controller/errorHandler');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const xss = require('xss-clean');
+const sanitize = require('express-mongo-sanitize');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
@@ -22,6 +24,10 @@ app.use(helmet())
 app.use('/api', limiter);
 
 app.use(express.json( { limit: '10kb' } ));
+
+app.use(sanitize());
+
+app.use(xss());
 
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
