@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const sanitize = require('express-mongo-sanitize');
+const hpp = require('hpp');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
@@ -28,6 +29,11 @@ app.use(express.json( { limit: '10kb' } ));
 app.use(sanitize());
 
 app.use(xss());
+
+app.use(hpp({
+    whitelist: 
+    ['duration', 'ratingsQuantity' , 'ratingsAverage', 'maxGroupSize', 'difficulty', 'price' ]
+}));
 
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));
