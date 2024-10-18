@@ -53,17 +53,15 @@ const userSchema = new mongoose.Schema({
         type: Date,
         select: false
     },
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    },
     passwordResetToken: String,
     passwordResetExpire: Date
     }
 );
-userSchema.pre('save', async function(next) {
-    if(!this.isModified('password')) return next();
-
-    this.password = await bcryptjs.hash(this.password, 12);
-    this.passwordConfirm = undefined;
-    next();
-});
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
     return await bcryptjs.compare(candidatePassword, userPassword)
 };
@@ -85,13 +83,23 @@ userSchema.methods.createPasswordResetToken = async function() {
     return resetToken;
 
 };
+userSchema.pre('save', async function(next) {
+    if(!this.isModified('password')) return next();
 
+    this.password = await bcryptjs.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+    next();
+});
 userSchema.pre('save', function(next) {
     if (!this.isModified('password') || this.isNew) return next();
 
     this.passwordChangedAt = Date.now() - 1000;
     next();
 });
+userSchema.pre(/^find/, function(next) {
+    this.find( { active: { $ne: false } } );
+    next();
+})
 
 const User = mongoose.model('User', userSchema);
 

@@ -75,10 +75,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
             }
         }
     )
-
-
-
-
 });
 exports.deleteUser = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -93,6 +89,15 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
         data: null
         }
     );
+});
+exports.deleteMe = catchAsync(async (req,res,next) => {
+    await User.findByIdAndUpdate(req.user.id, {active: false});
+    res.status(204).json(
+        {
+            status: 'success',
+            data: null
+        }
+    )
 });
 
 
