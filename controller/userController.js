@@ -16,6 +16,10 @@ exports.getUserById = factory.findOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.getAllUsers = factory.findAll(User);
 
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+}
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm){
         return next(new AppError('please use update password for updating the password'), 400);
