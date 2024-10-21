@@ -15,21 +15,8 @@ const filterObj = (obj, ...allowedFields) => {
 exports.deleteUser = factory.deleteOne(User);
 exports.getUserById = factory.findOne(User);
 exports.updateUser = factory.updateOne(User);
-exports.getAllUsers = catchAsync(async (req, res, next) => {
+exports.getAllUsers = factory.findAll(User);
 
-    const features = new APIFeature(user.find(), req.query).filter().sort().limitFields().pagination();
-    const users = await features.query;
-
-    res.status(200).json(
-        {
-            status: 'succsess',
-            results: users.length,
-            data: {
-                users
-            }
-        }
-    );
-});
 exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm){
         return next(new AppError('please use update password for updating the password'), 400);
