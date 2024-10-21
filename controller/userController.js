@@ -1,7 +1,8 @@
 const User = require('./../models/userModel');
 const APIFeature = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError')
+const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -76,20 +77,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         }
     )
 });
-exports.deleteUser = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndDelete(req.params.id);
+exports.deleteUser = factory.deleteOne(User);
 
-    if(!user) {
-        return next(new AppError('No user found with that ID', 404));
-    }
-
-    res.status(204).json(
-        {
-        status: 'success',
-        data: null
-        }
-    );
-});
 exports.deleteMe = catchAsync(async (req,res,next) => {
     await User.findByIdAndUpdate(req.user.id, {active: false});
     res.status(204).json(

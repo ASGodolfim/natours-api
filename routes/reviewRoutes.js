@@ -7,3 +7,5 @@ router
     .route('/')
     .get(controller.getAllReviews)
     .post(authController.protect, authController.restrictTo('user'), controller.createReview);
+
+router.route('/:id').delete(authController.protect, controller.deleteReview);
