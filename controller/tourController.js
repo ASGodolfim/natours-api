@@ -25,6 +25,7 @@ exports.getTourById = catchAsync(async (req, res, next) => {
     }
 
     const tour = await Tour.findById(req.params.id);
+    
     res.status(200).json(
         {
             status: 'succsess',

@@ -43,11 +43,7 @@ const userSchema = new mongoose.Schema({
     age: {
         type: Number,
         required: [true, 'must be over 18'],
-        validate: {
-            validator: function(el) {
-                return el >= 18;
-            }
-        }
+        min: 18
         },
     passwordChangedAt: {
         type: Date,
