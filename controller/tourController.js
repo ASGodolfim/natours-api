@@ -30,7 +30,6 @@ exports.getTourById = catchAsync(async (req, res, next) => {
             select: '-tour -__v'
         }
     )
-    });
     
     res.status(200).json(
         {
