@@ -8,13 +8,13 @@ router.use('/:tourId/reviews', reviewRouter);
 
 router
     .route('/')
-    .get(authController.protect, controller.getAllTours)
-    .post(authController.protect, controller.createTour);
+    .get(controller.getAllTours)
+    .post(authController.protect, authController.restrictTo('admin'), controller.createTour);
 
 router
     .route('/:id')
-    .get(authController.protect, controller.getTourById)
-    .patch(authController.protect, controller.updateTour)
+    .get(controller.getTourById)
+    .patch(authController.protect, authController.restrictTo('admin', 'lead'),  controller.updateTour)
     .delete(authController.protect, authController.restrictTo('admin', 'lead'), controller.deleteTour);
 
 router.route('/top-5-cheap').get(authController.protect, controller.aliasTopTours, controller.getAllTours);
