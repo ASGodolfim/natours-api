@@ -12,6 +12,9 @@ const filterObj = (obj, ...allowedFields) => {
     return newObj;
 };
 
+exports.deleteUser = factory.deleteOne(User);
+exports.getUserById = factory.findOne(User);
+exports.updateUser = factory.updateOne(User);
 exports.getAllUsers = catchAsync(async (req, res, next) => {
 
     const features = new APIFeature(user.find(), req.query).filter().sort().limitFields().pagination();
@@ -23,40 +26,6 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
             results: users.length,
             data: {
                 users
-            }
-        }
-    );
-});
-exports.getUserById = catchAsync(async (req, res, next) => {
-
-    if(!user) {
-        return next(new AppError('No user found with that ID', 404));
-    }
-
-    const user = await USer.findById(req.params.id);
-    res.status(200).json(
-        {
-            status: 'succsess',
-            data: {
-                user
-            }
-        }
-    );
-});
-exports.updateUser = catchAsync(async (req, res, next) => {
-
-    if(!user) {
-        return next(new AppError('No user found with that ID', 404));
-    }
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    })
-    res.status(200).json(
-        {
-            status: 'success',
-            data: {
-                user
             }
         }
     );
@@ -77,8 +46,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         }
     )
 });
-exports.deleteUser = factory.deleteOne(User);
-
 exports.deleteMe = catchAsync(async (req,res,next) => {
     await User.findByIdAndUpdate(req.user.id, {active: false});
     res.status(204).json(
@@ -88,6 +55,7 @@ exports.deleteMe = catchAsync(async (req,res,next) => {
         }
     )
 });
+
 
 
 /*
