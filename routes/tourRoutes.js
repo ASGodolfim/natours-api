@@ -21,6 +21,8 @@ router.route('/top-5-cheap').get(authController.protect, controller.aliasTopTour
 
 router.route('/tour-stats').get(authController.protect, controller.getTourStats);
 
+router. route('/tours-within/:distance/center/:latlng/unit/:unit').get(authController.protect, controller.getToursWithin);
+
 router.route('/monthly-plan/:year').get(authController.protect, controller.getMonthlyPlan);
 
 module.exports = router;
