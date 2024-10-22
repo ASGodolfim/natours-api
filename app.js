@@ -19,6 +19,7 @@ const limiter = rateLimit({
     message: 'too many requests from this IP, please try again in an hour'
 });
 
+app.set('view engine', 'pug');
 
 app.use(helmet())
 
