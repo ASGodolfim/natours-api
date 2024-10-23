@@ -12,6 +12,8 @@ const { title } = require('process');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes`);
 const userRouter = require(`${__dirname}/routes/userRoutes`);
+const reviewRouter = require(`${__dirname}/routes/reviewRoutes`);
+const viewRouter = require(`${__dirname}/routes/viewRoutes`);
 
 const app = express();
 
@@ -51,26 +53,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
-    res.status(200).render('base', {
-        title: 'Exiting tours for adventurous people',
-        tour: 'The Forest Hiker',
-        user: 'Arthur'
-    });
-});
-
-app.get('/overview', (req, res) =>{
-    res.status(200).render('ovewview',{
-        title: 'All Tours'
-    });
-});
-
-app.get('/tour', (req, res) =>{
-    res.status(200).render('tour',{
-        title: 'The Forest Hiker'
-    });
-});
-
+app.use('/', viewRouter);
 app.use('api/v1/tours', tourRouter);
 app.use('api/v1/users', userRouter);
 app.use('api/v1/reviews', reviewRouter);
