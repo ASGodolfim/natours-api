@@ -80,17 +80,17 @@ reviewSchema.post('save', function(next) {
     next();
 });
 
-reviewSchema.pre(/^findOneAnd/), async function(next) {
-    this.r = await this.findOne()
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+    this.r = await this.findOne();
     next();
-};
+});
 
-reviewSchema.post(/^findOneAnd/), async function(next) {
+reviewSchema.post(/^findOneAnd/, async function(next) {
     await this.r.constructor.calcAverageRatings(this.r.tour);
     next();
-};
+});
 
 
-const Review = mongoose.model('Review', userSchema);
+const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

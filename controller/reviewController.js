@@ -11,7 +11,7 @@ exports.setUserId = (req, res, next) => {
 };
 
 exports.getAllReviews = factory.findAll(Review);
-exports.findReviewById = factory.findOneO(Review);
+exports.findReviewById = factory.findOne(Review);
 exports.createReview = factory.createOne(Review);
 exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
