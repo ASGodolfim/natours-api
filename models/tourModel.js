@@ -29,12 +29,12 @@ const tourSchema = new mongoose.Schema({
             message: 'Difficulty is either: easy, medium or difficult'
         }
     },
-    ratingAverage: {
+    ratingsAverage: {
         type: Number,
         default: 4.5,
         set: val => Math.round(val * 10) / 10 
     },
-    ratingQuantity: {
+    ratingsQuantity: {
         type: Number,
         default: 0 
     },

@@ -26,6 +26,8 @@ const limiter = rateLimit({
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(helmet())
 
 app.use('/api', limiter);
@@ -46,7 +48,7 @@ if(process.env.NODE_ENV === 'development'){
 };
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();

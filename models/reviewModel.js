@@ -10,8 +10,7 @@ const reviewSchema = new mongoose.Schema({
     rating: {
         type: Number,
         min: 1,
-        max: 5,
-        required: [true, 'you need to rate the review']
+        max: 5
     },
     createdAt: {
         type: Date,
@@ -37,7 +36,7 @@ const reviewSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 });
 
-reviewSchema.index({tour: 1, user: 1}, {unique: true})
+//reviewSchema.index({tour: 1, user: 1}, {unique: true})
 
 reviewSchema.pre(/^find/, function(next) {
     this.populate(
@@ -52,10 +51,10 @@ reviewSchema.pre(/^find/, function(next) {
         }
     );
     next();
-})
+});
 
 reviewSchema.statics.calcAverageRatings = async function(tourId) {
-    const stats = await this.agregate([
+    const stats = await this.aggregate([
         {
             $match: {tour: tourId}
         },
@@ -63,21 +62,20 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
             $group: {
                 _id: '$tour',
                 nRatings: { $sum: 1},
-                avgRating: { $avg: rating },
+                avgRating: { $avg: '$rating' },
 
             }
         }
     ])
     if(stats.length >= 1){
-        Tour.findByIdAndUpdate(tourId, {ratingQuantity: stats[0].nRatings, ratingAverage: stats[0].avgRating})
+        Tour.findByIdAndUpdate(tourId, {ratingsQuantity: stats[0].nRatings, ratingsAverage: stats[0].avgRating})
     } else {
-        Tour.findByIdAndUpdate(tourId, {ratingQuantity: 0, ratingAverage: 0})
+        Tour.findByIdAndUpdate(tourId, {ratingsQuantity: 0, ratingsAverage: 0})
     }
-}
+};
 
-reviewSchema.post('save', function(next) {
-    this.constructor.calcAverageRatings(this.tour)
-    next();
+reviewSchema.post('save', function() {
+    this.constructor.calcAverageRatings(this.tour);
 });
 
 reviewSchema.pre(/^findOneAnd/, async function(next) {
@@ -85,9 +83,8 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
     next();
 });
 
-reviewSchema.post(/^findOneAnd/, async function(next) {
+reviewSchema.post(/^findOneAnd/, async function() {
     await this.r.constructor.calcAverageRatings(this.r.tour);
-    next();
 });
 
 
