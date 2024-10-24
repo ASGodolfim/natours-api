@@ -8,7 +8,6 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         tours
     });
 });
-
 exports.getTour = catchAsync(async (req, res, next) => {
     const tour = await Tour.findOne({slug: req.params.slug}).populate({
         path: 'reviews',
@@ -21,9 +20,15 @@ exports.getTour = catchAsync(async (req, res, next) => {
         tour
     });
 });
-
 exports.getLogin = catchAsync(async (req, res, next) => {
     res.status(200).render('login', {
         title: 'Log into your account'
     })
-})
+});
+exports.getBase = catchAsync(async (req, res, next) => {
+    const tours = await Tour.find();
+    res.status(200).render('base', {
+        title: 'All Tours',
+        tours
+    });    
+});

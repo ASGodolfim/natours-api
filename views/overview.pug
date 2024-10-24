@@ -2,7 +2,7 @@ extends base
 
 block content 
     main.main 
-        .card-continer 
+        .card-continer
 
             each tour in tours
                 .card 
@@ -20,7 +20,7 @@ block content
                                 svg.card__icon 
                                     use(xlink:href='/img/icons.svg#icon-map-pin')
                                 span= tour.startLocation.description 
-                        .card__data 
+                            .card__data 
                                 svg.card__icon 
                                     use(xlink:href='/img/icons.svg#icon-calendar')
                                 span= tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
@@ -32,7 +32,7 @@ block content
                                 svg.card__icon 
                                     use(xlink:href='/img/icons.svg#icon-user')
                                 span= `${tour.maxGroupSize} people`
-
+    
                         .card__footer 
                             p 
                                 span.card__footer-value= `$${tour.price}`

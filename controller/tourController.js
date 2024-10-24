@@ -114,7 +114,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
         }
     );
 });
-exports.getDistacnes = catchAsync(async (req, res, next) => {
+exports.getDistances = catchAsync(async (req, res, next) => {
     const { latlng, unit } = req.params
     const [lat, lng] = latlng.split(',');
 
@@ -124,7 +124,7 @@ exports.getDistacnes = catchAsync(async (req, res, next) => {
         next(new AppError('please provide latitude and longitude in format lat lng', 400));
     }
 
-    const distances = Tour.aggregate([
+    const distances = await Tour.aggregate([
         {
             $geoNear: {
                 near: {
@@ -135,7 +135,7 @@ exports.getDistacnes = catchAsync(async (req, res, next) => {
                 distanceMultiplier: multiplier
             }
         },
-        {
+        { 
             $project: {
                 distance: 1,
                 name: 1
