@@ -8,6 +8,11 @@ exports.getOverview = catchAsync(async (req, res, next) => {
         tours
     });
 });
+exports.getCard = catchAsync(async (req, res, next) => {
+    res.status(200).render('tourCard', {
+        title: 'All Tours',
+    });
+});
 exports.getTour = catchAsync(async (req, res, next) => {
     const tour = await Tour.findOne({slug: req.params.slug}).populate({
         path: 'reviews',
