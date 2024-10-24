@@ -13,3 +13,5 @@ router
     .get(controller.findReviewById)
     .delete(authController.protect, controller.deleteReview)
     .patch(authController.protect, controller.updateReview);
+
+module.exports = router;
