@@ -5,12 +5,13 @@ const User = require('./../models/userModel');
 const jwt = require('jsonwebtoken');
 const AppError = require('./../utils/appError');
 const sendEmail = require('./../utils/email');
+const { token } = require('morgan');
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
 
     const cookieOptions = { 
-        expires: new Date(Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 1000),
+        expiresAt: new Date(Date.now() + process.env.JWT_COOKIES_EXPIRES_IN * 24 * 60 * 1000),
         httpOnly: true
     }
     if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
@@ -46,23 +47,22 @@ exports.signup = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-    const {email, password, username} = req.body;
+    const {email, password} = req.body;
 
-    if (!email || !username) {
-        next(new AppError('Please provide a Username or email', 400));
+    if (!email) {
+        next(new AppError('Please provide a email', 400));
     } else if (!password) {
         next(new AppError('Please provide a password', 400));
     }
-    if(username) {
-        const user = await User.findOne({ username }).select('+password')
-    } else {
-        const user = await User.findOne({ email }).select('+password')
-    }
+    const user = await User.findOne({ email }).select('+password')
 
-    if(!user || !user.correctPassword(password, user.password)) {
+    if( await user.correctPassword(password, user.password)) {
+        createSendToken(user, 200, res);
+        return console.log(user)
+    } else {
         return next(new AppError('Incorrect username/email or password', 401));
     }
-    createSendToken(user, 200, res);
+    
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

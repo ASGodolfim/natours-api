@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ASGodolfim/natours-api#readme",
   "dependencies": {
+    "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
