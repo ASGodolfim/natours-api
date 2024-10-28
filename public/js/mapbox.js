@@ -1,38 +1,41 @@
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNzY2htZWR0bWFubiIsImEiOiJjam54ZmM5N3gwNjAzM3dtZDNxYTVlMnd2In0.ytpI7V7w7cyT1Kq5rT9Z1A'
+export const displayMap = (locations) => {
 
-var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/jonasschmedtmann/cjvi9q8jd04mi1cpgmg7ev3dy',
-    scrollZoom: false
-});
+    mapboxgl.accessToken = 'pk.eyJ1Ijoiam9uYXNzY2htZWR0bWFubiIsImEiOiJjam54ZmM5N3gwNjAzM3dtZDNxYTVlMnd2In0.ytpI7V7w7cyT1Kq5rT9Z1A'
 
-const bounds = new mapboxgl.LngLatBounds();
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/jonasschmedtmann/cjvi9q8jd04mi1cpgmg7ev3dy',
+        scrollZoom: false
+    });
 
-locations.forEach(loc => {
-    const el = document.createElement('div');
-    el.className = 'marker'
+    const bounds = new mapboxgl.LngLatBounds();
 
-    new mapboxgl.Marker({
-        element: el,
-        anchor: 'bottom'
-    }).setLngLat(loc.coordinates).addTo(map);
+    locations.forEach(loc => {
+        const el = document.createElement('div');
+        el.className = 'marker'
 
-    new mapboxgl.Popup({
-        offset: 30
-    })
-        .setLngLat(loc.coordinates)
-        .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
-        .addTo(map);
+        new mapboxgl.Marker({
+            element: el,
+            anchor: 'bottom'
+        }).setLngLat(loc.coordinates).addTo(map);
 
-    bounds.extend(loc.coordinates)
+        new mapboxgl.Popup({
+            offset: 30
+        })
+            .setLngLat(loc.coordinates)
+            .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
+            .addTo(map);
 
-});
+        bounds.extend(loc.coordinates)
 
-map.fitBounds(bounds, {
-    top: 200,
-    bottom: 150,
-    left: 100,
-    right: 100
-});
+    });
+
+    map.fitBounds(bounds, {
+        top: 200,
+        bottom: 150,
+        left: 100,
+        right: 100
+    });
+}

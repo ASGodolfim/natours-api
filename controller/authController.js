@@ -37,6 +37,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         username: req.body.username,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
+        passwordChangedAt: req.body.passwordChangedAt,
         name: req.body.name,
         email: req.body.email,
         age: req.body.age,
@@ -58,7 +59,6 @@ exports.login = catchAsync(async (req, res, next) => {
 
     if( await user.correctPassword(password, user.password)) {
         createSendToken(user, 200, res);
-        return console.log(user)
     } else {
         return next(new AppError('Incorrect username/email or password', 401));
     }
@@ -67,17 +67,20 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
-    if  (req.headers.authorization &&
-         req.headers.authorization.startsWith('Bearer ')){
-            token = req.headers.authorization.split(' ')[1];
-         }
-    if (!token){
+    if (req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer '))
+    {
+        token = req.headers.authorization.split(' ')[1];
+    } else if(req.cookies.jwt) {
+        token = req.cookies.jwt;
+    }
+    if(!token){
         return next(new AppError('Please Log in First', 401));
     }
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
     
-    const freshUser = User.findById(decoded.id).select('+passwordChangedAt');
+    const freshUser = await User.findById(decoded.id).select('+passwordChangedAt');
     if (!freshUser){
         return next(new AppError('No user found please log again', 401));
     }
@@ -154,4 +157,20 @@ exports.updatePassword = catchAsync(async(req, res, next) => {
         await user.save();
         createSendToken(user, 200, res);
     } else return next(new AppError('Invalid Password'), 401)
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+     if(req.cookies.jwt) {
+
+        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
+        
+        const currentUser = await User.findById(decoded.id).select('+passwordChangedAt');
+        
+        if (!currentUser){
+            return next();
+        }
+        res.locals.user = currentUser;
+        return next();
+    }
+    next();
 });
