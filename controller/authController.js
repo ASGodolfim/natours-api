@@ -65,6 +65,16 @@ exports.login = catchAsync(async (req, res, next) => {
     
 });
 
+exports.logout = (req, res) => {
+    res.cookie('jwt', 'loggedout', {
+        expiresAt: new Date(Date.now + 10 * 1000),
+        httpOnly: true
+    });
+    res.status(200).json({
+        status: 'success'
+    })
+}
+
 exports.protect = catchAsync(async (req, res, next) => {
     let token;
     if (req.headers.authorization &&
@@ -159,18 +169,20 @@ exports.updatePassword = catchAsync(async(req, res, next) => {
     } else return next(new AppError('Invalid Password'), 401)
 });
 
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
-     if(req.cookies.jwt) {
+exports.isLoggedIn = async (req, res, next) => {
+    try{
+        if(req.cookies.jwt) {
 
-        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
-        
-        const currentUser = await User.findById(decoded.id).select('+passwordChangedAt');
-        
-        if (!currentUser){
+            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET)
+            
+            const currentUser = await User.findById(decoded.id).select('+passwordChangedAt');
+            
+            if (!currentUser){
+                return next();
+            }
+            res.locals.user = currentUser;
             return next();
         }
-        res.locals.user = currentUser;
-        return next();
-    }
+    } catch (err) {return next();}
     next();
-});
+};

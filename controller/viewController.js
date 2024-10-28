@@ -3,7 +3,10 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
     const tours = await Tour.find();
-    res.status(200).render('overview', {
+    res.status(200).set(
+        'Content-Security-Policy',
+        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        ).render('overview', {
         title: 'All Tours',
         tours
     });
@@ -13,7 +16,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
         path: 'reviews',
         fields: 'review rating user'
     });
-    res.status(200).render('tour',{
+    res.status(200).set(
+        'Content-Security-Policy',
+        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        ).render('tour',{
         title: `${tour.name} Tour`,
         tour
     });
