@@ -1,3 +1,8 @@
+import axios from 'axios';
+import { showAlert } from './alarm';
+
+console.log('test from login');
+
 export const login = async (email, password) => {
     try{
         const res = await axios({
@@ -11,16 +16,16 @@ export const login = async (email, password) => {
 
         console.log(res.data);
         if(res.data.status === 'success'){
+            showAlert('success', 'Logged in successfuly')
+            console.log(showAlert)
             window.setTimeout(() => {
                 location.assign('/');
             }, 1500);
         };
-
         console.log(res)
 
     }catch (err) {
-        alert(err.response.data.message)
+        showAlert('error', 'incorrect email/password');
+        console.log(showAlert)
     }
 }
-
-

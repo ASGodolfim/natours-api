@@ -21,7 +21,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
 exports.getLogin = catchAsync(async (req, res, next) => {
     res.status(200).set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/")
+        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;")
         .render('login', {
         title: 'Log into your account'
     })
