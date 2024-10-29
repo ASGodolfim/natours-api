@@ -21,6 +21,10 @@ exports.getMe = (req, res, next) => {
     next();
 }
 exports.updateMe = catchAsync(async (req, res, next) => {
+    console.log(req.file);
+    console.log(req.body);
+
+    
     if (req.body.password || req.body.passwordConfirm){
         return next(new AppError('please use update password for updating the password'), 400);
     }

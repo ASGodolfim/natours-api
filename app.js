@@ -10,6 +10,7 @@ const hpp = require('hpp');
 const path = require('path');
 const { title } = require('process');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
 
 const tourRouter = require(`./routes/tourRoutes`);
 const userRouter = require(`./routes/userRoutes`);
@@ -17,6 +18,8 @@ const reviewRouter = require(`./routes/reviewRoutes`);
 const viewRouter = require(`./routes/viewRoutes`);
 
 const app = express();
+
+const upload = multer({ dest: 'public/img/users'})
 
 const limiter = rateLimit({
     max: 100,
@@ -60,7 +63,6 @@ app.use(express.json());
 
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
-    console.log(req.cookies);
     next();
 });
 
