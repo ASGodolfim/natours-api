@@ -10,4 +10,6 @@ router.get('/', authController.isLoggedIn, controller.getOverview);
 router.get('/tour/:slug', authController.isLoggedIn, controller.getTour);
 router.get('/login', authController.isLoggedIn, controller.getLogin);
 
+router.post('/submit-user-data',authController.protect, controller.updateUserData);
+
 module.exports = router;

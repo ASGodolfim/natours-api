@@ -12880,7 +12880,7 @@ var _mapbox = require("./mapbox");
 var _login = require("./login");
 console.log('test from index');
 var logOutBtn = document.querySelector('.nav__el--logout');
-var loginForm = document.querySelector('.form');
+var loginForm = document.querySelector('.form--login');
 var mapBox = document.getElementById('map');
 if (mapBox) {
   var locations = JSON.parse(mapBox.dataset.locations);

@@ -5,7 +5,7 @@ import { login, logout } from './login';
 console.log('test from index');
 
 const logOutBtn = document.querySelector('.nav__el--logout')
-const loginForm = document.querySelector('.form');
+const loginForm = document.querySelector('.form--login');
 const mapBox = document.getElementById('map');
 
 if(mapBox){

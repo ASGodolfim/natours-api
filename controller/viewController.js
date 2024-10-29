@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -53,3 +54,22 @@ exports.getAccount = (req, res) => {
         title: 'Account',
     });
 };
+
+exports.updateUserData = catchAsync(async (req, res, next) => {
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, {
+        name: req.body.name,
+        email: req.body.email
+    },
+    {
+        new: true,
+        runValidators: true
+    });
+    console.log(updatedUser);
+    res.status(200).set(
+        'Content-Security-Policy',
+        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        ).render('account',{
+        title: 'Account',
+        user: updatedUser
+    });
+});
