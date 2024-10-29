@@ -15,7 +15,7 @@ router
 router
     .route('/:id')
     .get(controller.getTourById)
-    .patch(authController.protect, authController.restrictTo('admin', 'lead'),  controller.updateTour)
+    .patch(authController.protect, authController.restrictTo('admin', 'lead'), controller.uploadTourPhoto, controller.resizeTourPhoto,  controller.updateTour)
     .delete(authController.protect, authController.restrictTo('admin', 'lead'), controller.deleteTour);
 
 router.route('/top-5-cheap').get(authController.protect, controller.aliasTopTours, controller.getAllTours);
