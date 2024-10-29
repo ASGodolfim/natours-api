@@ -12956,12 +12956,11 @@ if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);
 if (updateForm) {
   updateForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name = document.getElementById('name').value;
-    var email = document.getElementById('email').value;
-    (0, _updateSettings.updateUser)({
-      name: name,
-      email: email
-    }, 'data');
+    var form = new FormData();
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    (0, _updateSettings.updateUser)(form, 'data');
   });
 }
 if (updatePasswordForm) {
@@ -12983,7 +12982,7 @@ if (updatePasswordForm) {
               passwordConfirm: passwordConfirm
             }, 'password');
           case 7:
-            document.querySelector('.btn--save-password').textContent = 'Save Password';
+            document.querySelector('.btn--save-password').value = 'Save Password';
             document.getElementById('password-current').value = '';
             document.getElementById('password').value = '';
             document.getElementById('password-confirm').value = '';
