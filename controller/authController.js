@@ -160,14 +160,20 @@ exports.resetPassword = catchAsync(async(req, res, next) => {
 
 exports.updatePassword = catchAsync(async(req, res, next) => {
     const user = await User.findById(req.user._id).select('+password');
-    if (!user) return next(new AppError('User not found', 404));
 
+    if (!user) return next(new AppError('User not found', 404));
+    
     if(await user.correctPassword(req.body.passwordCurrent, user.password)){
+        console.log('correct password');
         user.password = req.body.password;
         user.passwordConfirm = req.body.passwordConfirm;
         await user.save();
+        console.log('updated user')
         createSendToken(user, 200, res);
-    } else return next(new AppError('Invalid Password'), 401)
+    } else {
+        console.log('invalid password');
+        return next(new AppError('Invalid Password'), 401)
+    }
 });
 
 exports.isLoggedIn = async (req, res, next) => {

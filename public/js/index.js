@@ -5,8 +5,9 @@ import { updateUser } from './updateSettings';
 
 console.log('test from index');
 
-const updateForm = document.querySelector('.form-user-data')
-const logOutBtn = document.querySelector('.nav__el--logout')
+const updatePasswordForm = document.querySelector('.form-user-settings');
+const updateForm = document.querySelector('.form-user-data');
+const logOutBtn = document.querySelector('.nav__el--logout');
 const loginForm = document.querySelector('.form--login');
 const mapBox = document.getElementById('map');
 
@@ -29,6 +30,15 @@ if(updateForm){
         e.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
-        updateUser(name, email);
+        updateUser({name, email}, 'data');
+    });
+}
+if(updatePasswordForm){
+    updatePasswordForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const passwordCurrent = document.getElementById('password-current').value;
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password-confirm').value;
+        updateUser({passwordCurrent, password, passwordConfirm}, 'password')
     });
 }
