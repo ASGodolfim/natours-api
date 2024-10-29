@@ -33,7 +33,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'name needed'],
     },
-    photo: String,
+    photo: {
+        type: String,
+        default: 'default.jpg'
+    },
     email: {
         type: String,
         required: [true, 'email needed'],
