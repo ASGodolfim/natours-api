@@ -1,9 +1,11 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
+import { updateUser } from './updateSettings';
 
 console.log('test from index');
 
+const updateForm = document.querySelector('.form-user-data')
 const logOutBtn = document.querySelector('.nav__el--logout')
 const loginForm = document.querySelector('.form--login');
 const mapBox = document.getElementById('map');
@@ -20,5 +22,13 @@ if(loginForm){
         login(email, password);
     });
 }
+if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
-if (logOutBtn) logOutBtn.addEventListener('click', logout)
+if(updateForm){
+    updateForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        updateUser(name, email);
+    });
+}

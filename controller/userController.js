@@ -24,14 +24,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm){
         return next(new AppError('please use update password for updating the password'), 400);
     }
-    const filteredBody = filterObj(req.body, 'name', 'email', 'username')
+    const filteredBody = filterObj(req.body, 'name', 'email')
     const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {new: true, runValidators: true})
 
     res.status(200).json(
         {
-            status: 'succsess',
+            status: 'success',
             data: {
-                user
+                user: updatedUser
             }
         }
     )
