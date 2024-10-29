@@ -34,11 +34,18 @@ if(updateForm){
     });
 }
 if(updatePasswordForm){
-    updatePasswordForm.addEventListener('submit', e => {
+    updatePasswordForm.addEventListener('submit',async e => {
         e.preventDefault();
+        document.querySelector('.btn--save-password').textContent = 'Updating...'
+
         const passwordCurrent = document.getElementById('password-current').value;
         const password = document.getElementById('password').value;
         const passwordConfirm = document.getElementById('password-confirm').value;
-        updateUser({passwordCurrent, password, passwordConfirm}, 'password')
+        await updateUser({passwordCurrent, password, passwordConfirm}, 'password');
+
+        document.querySelector('.btn--save-password').textContent = 'Save Password'
+        document.getElementById('password-current').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('password-confirm').value = '';
     });
 }
