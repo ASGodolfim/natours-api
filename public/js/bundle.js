@@ -12724,19 +12724,20 @@ var logout = exports.logout = /*#__PURE__*/function () {
         case 3:
           res = _context2.sent;
           console.log(res.data.status);
-          if (res.data.status === 'success') location.reload(true);
-          _context2.next = 12;
+          if (res.data.status === 'success') location.assign('/');
+          ;
+          _context2.next = 13;
           break;
-        case 8:
-          _context2.prev = 8;
+        case 9:
+          _context2.prev = 9;
           _context2.t0 = _context2["catch"](0);
           console.log(_context2.t0.response);
           (0, _alarm.showAlert)('error', 'Error logging out');
-        case 12:
+        case 13:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 8]]);
+    }, _callee2, null, [[0, 9]]);
   }));
   return function logout() {
     return _ref2.apply(this, arguments);

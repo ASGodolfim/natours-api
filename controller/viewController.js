@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
@@ -23,6 +24,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
         title: `${tour.name} Tour`,
         tour
     });
+
+    if (!tour) {
+        return next(new AppError('No Tour Found', 404))
+    }
 });
 exports.getLogin = catchAsync(async (req, res, next) => {
     res.status(200).set(
@@ -39,3 +44,12 @@ exports.getBase = catchAsync(async (req, res, next) => {
         tours
     });    
 });
+
+exports.getAccount = (req, res) => {
+    res.status(200).set(
+        'Content-Security-Policy',
+        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        ).render('account',{
+        title: 'Account',
+    });
+};

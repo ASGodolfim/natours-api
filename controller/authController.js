@@ -90,14 +90,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
     
-    const freshUser = await User.findById(decoded.id).select('+passwordChangedAt');
-    if (!freshUser){
+    const currentUser = await User.findById(decoded.id).select('+passwordChangedAt');
+    if (!currentUser){
         return next(new AppError('No user found please log again', 401));
     }
-    if(freshUser.changedPasswordAfter(decoded.iat)){
+    if(currentUser.changedPasswordAfter(decoded.iat)){
         return next(new AppError('User recently changed password please log in again', 401));
     }
-    req.user = freshUser;
+    req.user = currentUser;
+    res.locals.user = currentUser;
     next();
 });
 
