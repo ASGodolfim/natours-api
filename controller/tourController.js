@@ -22,20 +22,37 @@ exports.uploadTourPhoto = upload.fields([{
     name: 'imageCover', maxCount: 1},
     {name: 'images', maxCount: 3}
 ]);
-exports.resizeTourPhoto = (req, res, next) => {
-    if(!req.files){return next()}
-/*
-    const ext = file.mimetype.split('/')[1];
-    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+exports.resizeTourPhoto = catchAsync(async (req, res, next) => {
+    if(!req.files.imageCover || !req.files.images){return next()}
 
-    sharp(req.file.buffer)
-        .resize(500, 500)
+    const imageCoverFilename =`tour-${req.params.id}-${Date.now()}-cover.jpeg`
+
+    req.body.imageCover = imageCoverFilename;
+
+    await sharp(req.files.imageCover[0].buffer)
+        .resize(2000, 1333)
         .toFormat('jpeg')
         .jpeg({ quality: 90 })
-        .toFile(`public/imgs/users/${req.file.filename}`);
-*/    
+        .toFile(`public/imgs/tours/${imageCoverFilename}`);
+
+    req.body.images = []    
+
+    await Promise.all(
+        req.files.images.foreach.map(async (file, i) => {
+            const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`
+            
+            await sharp(file.buffer)
+            .resize(2000, 1333)
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toFile(`public/imgs/tours/${filename}`);
+
+        req.body.push(filename);
+        })
+    );    
+
     next();
-};
+});
 
 
 exports.getTourById = factory.findOne(Tour, {path: 'review', select: '-__v -tour'});
