@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const { options } = require('../routes/userRoutes');
+//const { options } = require('../routes/userRoutes');
 const htmlToText = require('html-to-text');
 
 
@@ -12,10 +12,11 @@ module.exports = class Email{
     }
 
     newTransport() {
+        /*
         if(process.env.NODE_ENV === 'production'){
             return 1
         }
-        
+        */
         return nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
@@ -40,29 +41,11 @@ module.exports = class Email{
         this.newTransport().sendMail(mailOptions);
     }
 
-    sendWelcome(){
-        this.send('welcome', 'Welcome to Natours')
+    async sendWelcome(){
+        await this.send('welcome', 'Welcome to Natours')
     }
-        
+    
+    async sendPasswordReset(){
+        await this.send('passwordReset', 'Your password reset token (valid for only 10 minutes)')
+    }
 };
-
-const sendEmail = async options => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
-        }  
-    });
-    const mailOptions = {
-        from: 'Jonas Schmedtmann <hello@honas.io>',
-        to: options.email,
-        subject: options.subject,
-        test: options.message,
-
-    };
-   await transporter.sendMail(mailOptions)
-};
-
-module.exports = sendEmail;
