@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
+const Bookings = require('../models/bookingModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -33,14 +34,14 @@ exports.getTour = catchAsync(async (req, res, next) => {
         return next(new AppError('No Tour Found', 404))
     }
 });
-exports.getLogin = catchAsync(async (req, res, next) => {
+exports.getLogin =(req, res, next) => {
     res.status(200).set(
         'Content-Security-Policy',
         "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/")
         .render('login', {
         title: 'Log into your account'
     })
-});
+};
 exports.getBase = catchAsync(async (req, res, next) => {
     const tours = await Tour.find();
     res.status(200).render('base', {
@@ -73,4 +74,8 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
         title: 'Account',
         user: updatedUser
     });
+});
+exports.getMyTours = catchAsync(async(req, res, next) => {
+    const bookings = await Bookings.find({tour: req.user.id});
+    
 });
