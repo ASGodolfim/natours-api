@@ -76,6 +76,19 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     });
 });
 exports.getMyTours = catchAsync(async(req, res, next) => {
-    const bookings = await Bookings.find({tour: req.user.id});
-    
+    const booking = await Bookings.find({user: req.user.id});
+   
+    const tourIDs = booking.map(el => el.tour);
+    const tours = await Tour.find({ _id: { $in: tourIDs} });
+
+    res.status(200).set(
+        'Content-Security-Policy',
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
+    ).render('overview',
+        {
+            title: 'My Tours',
+            tours
+        }
+    );
+
 });
