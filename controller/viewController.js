@@ -7,7 +7,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
     const tours = await Tour.find();
     res.status(200).set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
         ).render('overview', {
         title: 'All Tours',
         tours
@@ -18,10 +18,13 @@ exports.getTour = catchAsync(async (req, res, next) => {
         path: 'reviews',
         fields: 'review rating user'
     });
-    res.status(200).set(
+
+    res.set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
-        ).render('tour',{
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
+        )
+
+    res.status(200).render('tour',{
         title: `${tour.name} Tour`,
         tour
     });
@@ -33,7 +36,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
 exports.getLogin = catchAsync(async (req, res, next) => {
     res.status(200).set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;")
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/")
         .render('login', {
         title: 'Log into your account'
     })
@@ -45,16 +48,14 @@ exports.getBase = catchAsync(async (req, res, next) => {
         tours
     });    
 });
-
 exports.getAccount = (req, res) => {
     res.status(200).set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
         ).render('account',{
         title: 'Account',
     });
 };
-
 exports.updateUserData = catchAsync(async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(req.user.id, {
         name: req.body.name,
@@ -67,7 +68,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     console.log(updatedUser);
     res.status(200).set(
         'Content-Security-Policy',
-        "connect-src 'self' http://127.0.0.1:3000/ ws://127.0.0.1:62690/;"
+        "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
         ).render('account',{
         title: 'Account',
         user: updatedUser
