@@ -33,7 +33,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     });
 
 });
-
 exports.createBookingCheckout = catchAsync(async(req, res, next) => {
     const {tour, user, price}=req.query;
 
@@ -41,3 +40,9 @@ exports.createBookingCheckout = catchAsync(async(req, res, next) => {
     await Booking.create({tour, user, price})
     res.redirect(req.originalUrl.split('?')[0]);
 });
+
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.findOne(Booking);
+exports.getAllBookings = factory.findAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
