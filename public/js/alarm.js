@@ -1,5 +1,3 @@
-console.log('test from alarm');
-
 export const hideAlert = () => {
     const el = document.querySelector('.alert');
     if(el) el.parentElement.removeChild(el);

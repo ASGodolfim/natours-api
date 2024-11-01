@@ -11,6 +11,7 @@ const path = require('path');
 const { title } = require('process');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
+const compression = require('compression');
 
 const tourRouter = require(`./routes/tourRoutes`);
 const userRouter = require(`./routes/userRoutes`);
@@ -33,12 +34,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", "127.0.0.1:8000"],
-      connectSrc: ["'self'", "127.0.0.1:8000"],
-    },
-  }));
+app.use(helmet.contentSecurityPolicy());
 
 app.use('/api', limiter);
 
@@ -54,6 +50,8 @@ app.use(hpp({
     whitelist: 
     ['duration', 'ratingsQuantity' , 'ratingsAverage', 'maxGroupSize', 'difficulty', 'price' ]
 }));
+
+app.use(compression())
 
 if(process.env.NODE_ENV === 'development'){
     app.use(morgan('dev'));

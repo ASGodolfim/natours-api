@@ -4,8 +4,6 @@ import { login, logout } from './login';
 import { updateUser } from './updateSettings';
 import { bookTour } from './stripe';
 
-console.log('test from index');
-
 const updatePasswordForm = document.querySelector('.form-user-settings');
 const updateForm = document.querySelector('.form-user-data');
 const logOutBtn = document.querySelector('.nav__el--logout');

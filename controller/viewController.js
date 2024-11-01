@@ -66,7 +66,6 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
         new: true,
         runValidators: true
     });
-    console.log(updatedUser);
     res.status(200).set(
         'Content-Security-Policy',
         "connect-src 'self' http://127.0.0.1:8000/ ws://127.0.0.1:62690/"
